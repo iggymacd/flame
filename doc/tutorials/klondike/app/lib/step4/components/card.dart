@@ -280,5 +280,14 @@ class Card extends PositionComponent with DragCallbacks {
     }
   }
 
+  // @override
+  // // void onTapUp(TapUpEvent event) => someField;
+  // void newMethod(TapUpEvent event) {
+  //   super.onTapUp(event);
+  // }
+  // @override
+  // void onTapUp(TapUpEvent event) {
+  //   print('tappp card...');
+  // }
   //#endregion
 }

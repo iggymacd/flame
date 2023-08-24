@@ -42,6 +42,7 @@ class StockPile extends PositionComponent with TapCallbacks implements Pile {
 
   @override
   void onTapUp(TapUpEvent event) {
+    print('tappp...');
     final wastePile = parent!.firstChild<WastePile>()!;
     if (_cards.isEmpty) {
       wastePile.removeAllCards().reversed.forEach((card) {

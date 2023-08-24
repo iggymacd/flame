@@ -5,6 +5,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
 import 'components/card.dart';
+import 'components/deck_pile.dart';
 import 'components/foundation_pile.dart';
 import 'components/stock_pile.dart';
 import 'components/tableau_pile.dart';
@@ -35,21 +36,26 @@ class KlondikeGame extends FlameGame {
         position: Vector2((i + 3) * (cardWidth + cardGap) + cardGap, cardGap),
       ),
     );
-    final piles = List.generate(
-      7,
-      (i) => TableauPile(
-        position: Vector2(
-          cardGap + i * (cardWidth + cardGap),
-          cardHeight + 2 * cardGap,
-        ),
-      ),
-    );
+    // final piles = List.generate(
+    //   7,
+    //   (i) => TableauPile(
+    //     position: Vector2(
+    //       cardGap + i * (cardWidth + cardGap),
+    //       cardHeight + 2 * cardGap,
+    //     ),
+    //   ),
+    // );
+    final deck = DeckPile(
+        position:
+            Vector2(cardGap + cardWidth + cardGap, cardHeight + 2 * cardGap));
 
     final world = World()
-      ..add(stock)
-      ..add(waste)
-      ..addAll(foundations)
-      ..addAll(piles);
+          ..add(stock)
+          ..add(waste)
+          ..addAll(foundations)
+          ..add(deck)
+        // ..addAll(piles)
+        ;
     add(world);
 
     final camera = CameraComponent(world: world)
@@ -59,6 +65,7 @@ class KlondikeGame extends FlameGame {
       ..viewfinder.anchor = Anchor.topCenter;
     add(camera);
 
+    // Function func = ;
     final cards = [
       for (var rank = 1; rank <= 13; rank++)
         for (var suit = 0; suit < 4; suit++) Card(rank, suit),
@@ -66,13 +73,14 @@ class KlondikeGame extends FlameGame {
     cards.shuffle();
     world.addAll(cards);
 
-    for (var i = 0; i < 7; i++) {
-      for (var j = i; j < 7; j++) {
-        piles[j].acquireCard(cards.removeLast());
-      }
-      piles[i].flipTopCard();
-    }
-    cards.forEach(stock.acquireCard);
+    // for (var i = 0; i < 7; i++) {
+    //   for (var j = i; j < 7; j++) {
+    //     piles[j].acquireCard(cards.removeLast());
+    //   }
+    //   piles[i].flipTopCard();
+    // }
+    // cards.forEach(stock.acquireCard);
+    cards.forEach(deck.acquireCard);
   }
 }
 
