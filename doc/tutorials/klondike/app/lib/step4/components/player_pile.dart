@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:klondike/step4/components/deck_pile.dart';
 
@@ -105,6 +106,10 @@ class PlayerPile extends PositionComponent
     final deck = parent!.firstChild<DeckPile>()!;
     print(
         'player tapped when game isDealing is ${game.isDealing} and deck is $deck');
+    if (game.isDealing) {
+      deck.dealTo(this);
+    }
+
     super.onTapUp(event);
   }
 }

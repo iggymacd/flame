@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 
 import '../klondike_game.dart';
 import '../pile.dart';
 import 'card.dart';
+import 'player_pile.dart';
 
 class DeckPile extends PositionComponent implements Pile {
   DeckPile({super.position}) : super(size: KlondikeGame.cardSize);
@@ -101,6 +103,20 @@ class DeckPile extends PositionComponent implements Pile {
   @override
   void render(Canvas canvas) {
     canvas.drawRRect(KlondikeGame.cardRRect, _borderPaint);
+  }
+
+  Future<void> dealTo(PlayerPile playerPile, {MoveToEffect? effect}) async {
+    final topCard = _cards.removeLast();
+    // if (effect != null) {
+    topCard.add(MoveToEffect(
+      onComplete: () {
+        playerPile.acquireCard(topCard);
+      },
+      playerPile.position,
+      // Vector2(100, 500),
+      EffectController(duration: .5),
+    ));
+    // }
   }
 
   //#endregion
