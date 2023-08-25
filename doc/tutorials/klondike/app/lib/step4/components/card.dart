@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import '../klondike_game.dart';
@@ -280,6 +281,14 @@ class Card extends PositionComponent with DragCallbacks {
     }
   }
 
+  void deal(Pile pile) {
+    print('dealing card to ${pile.toString()}');
+    final effect = MoveToEffect(
+      Vector2(100, 500),
+      EffectController(duration: 3),
+    );
+    add(effect);
+  }
   // @override
   // // void onTapUp(TapUpEvent event) => someField;
   // void newMethod(TapUpEvent event) {

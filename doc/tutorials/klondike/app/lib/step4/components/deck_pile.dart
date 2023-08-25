@@ -19,7 +19,8 @@ class DeckPile extends PositionComponent implements Pile {
   //#region Pile API
 
   @override
-  bool canMoveCard(Card card) => card.isFaceDown;
+  bool canMoveCard(Card card) =>
+      card.isFaceDown && _cards.isNotEmpty && _cards.last == card;
 
   @override
   bool canAcceptCard(Card card) {
