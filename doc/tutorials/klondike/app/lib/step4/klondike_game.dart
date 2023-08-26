@@ -15,6 +15,7 @@ import 'components/deck_pile.dart';
 import 'components/player_pile.dart';
 // import 'components/stock_pile.dart';
 // import 'components/tableau_pile.dart';
+import 'components/trick_pile.dart';
 import 'components/waste_pile.dart';
 
 class KlondikeGame extends FlameGame with KeyboardEvents {
@@ -65,8 +66,11 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
     await Flame.images.load('klondike-sprites.png');
 
     // final stock = StockPile(position: Vector2(cardGap, cardGap));
-    final waste =
-        WastePile(position: Vector2(cardWidth + 2 * cardGap, cardGap));
+    final trickPile = TrickPile(
+        position: Vector2(
+            gameWidth / 2 - cardWidth / 2, gameHeight / 2 - cardHeight / 2));
+    // final waste =
+    // WastePile(position: Vector2(cardWidth + 2 * cardGap, cardGap));
     final playerPiles = List.generate(
       numberOfPlayers,
       (i) => PlayerPile(
@@ -88,7 +92,7 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
 
     final world = World()
           // ..add(stock)
-          ..add(waste)
+          ..add(trickPile)
           ..addAll(playerPiles)
           ..add(deck)
         // ..addAll(piles)
