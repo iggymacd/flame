@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 // import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -65,6 +66,27 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
   Future<void> onLoad() async {
     await Flame.images.load('klondike-sprites.png');
 
+    var pressedTimes = 0;
+    var releasedTimes = 0;
+    var cancelledTimes = 0;
+    // final initialGameSize = Vector2.all(200);
+    final componentSize = Vector2.all(100);
+    final buttonPosition = Vector2.all(100);
+    late final ButtonComponent button;
+    // game.onGameResize(initialGameSize);
+    // await game.ensureAdd(
+    final onPressed2 = () => pressedTimesDisplay();
+    button = ButtonComponent(
+      button: CircleComponent(radius: 40),
+      // button: RectangleComponent(size: componentSize),
+      onPressed: onPressed2,
+      onReleased: () => releasedTimes++,
+      onCancelled: () => cancelledTimes++,
+      position: buttonPosition,
+      size: componentSize,
+    );
+    // );
+
     // final stock = StockPile(position: Vector2(cardGap, cardGap));
     final trickPile = TrickPile(
         position: Vector2(
@@ -92,6 +114,7 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
 
     final world = World()
           // ..add(stock)
+          ..add(button)
           ..add(trickPile)
           ..addAll(playerPiles)
           ..add(deck)
@@ -150,6 +173,10 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
   }
 
   int get numberOfPlayers => 4;
+
+  pressedTimesDisplay() {
+    print('clicked!!!!!');
+  }
 }
 
 Sprite klondikeSprite(double x, double y, double width, double height) {
