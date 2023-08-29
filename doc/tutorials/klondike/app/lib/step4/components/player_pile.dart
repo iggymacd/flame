@@ -13,10 +13,10 @@ import 'card.dart';
 class PlayerPile extends PositionComponent
     with TapCallbacks, HasGameRef<KlondikeGame>
     implements Pile {
-  PlayerPile(int intSuit, {super.position})
+  PlayerPile(int intSuit, {this.name = 'Unknown', super.position})
       : suit = Suit.fromInt(intSuit),
         super(size: KlondikeGame.cardSize);
-
+  final String name;
   final Suit suit;
   final List<Card> _cards = [];
   final Vector2 _fanOffset1 = Vector2(KlondikeGame.cardWidth * 0.05, 0);
@@ -25,6 +25,7 @@ class PlayerPile extends PositionComponent
 
   @override
   bool canMoveCard(Card card) {
+    // this.
     // return _cards.isNotEmpty && card == _cards.last;
     return _cards.isNotEmpty && card.isFaceUp;
   }
@@ -52,7 +53,9 @@ class PlayerPile extends PositionComponent
 
   @override
   void acquireCard(Card card) {
-    assert(card.isFaceDown);
+    if (name != 'SOUTH') {
+      assert(card.isFaceDown);
+    }
     card.position = position;
     card.priority = _cards.length;
     card.pile = this;

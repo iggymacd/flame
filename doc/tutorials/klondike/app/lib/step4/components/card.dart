@@ -21,12 +21,24 @@ class Card extends PositionComponent with DragCallbacks {
   final Suit suit;
   Pile? pile;
   bool _faceUp = false;
+  bool _horizontal = false;
   bool _isDragging = false;
   final List<Card> attachedCards = [];
 
   bool get isFaceUp => _faceUp;
   bool get isFaceDown => !_faceUp;
+  bool get isHorizontal => _horizontal;
+  // bool get isFaceDown => !_faceUp;
   void flip() => _faceUp = !_faceUp;
+  void toHorizontal() {
+    _horizontal = true;
+    size = KlondikeGame.cardSizeHor;
+  }
+
+  void toVertical() {
+    _horizontal = false;
+    size = KlondikeGame.cardSize;
+  }
 
   @override
   String toString() => rank.label + suit.label; // e.g. "Q♠" or "10♦"
@@ -56,14 +68,26 @@ class Card extends PositionComponent with DragCallbacks {
     KlondikeGame.cardSize.toRect(),
     const Radius.circular(KlondikeGame.cardRadius),
   );
+  static final RRect cardRRectHor = RRect.fromRectAndRadius(
+    KlondikeGame.cardSizeHor.toRect(),
+    const Radius.circular(KlondikeGame.cardRadius),
+  );
   static final RRect backRRectInner = cardRRect.deflate(40);
+  static final RRect backRRectInnerHor = cardRRectHor.deflate(40);
   static final Sprite flameSprite = klondikeSprite(1367, 6, 357, 501);
 
   void _renderBack(Canvas canvas) {
-    canvas.drawRRect(cardRRect, backBackgroundPaint);
-    canvas.drawRRect(cardRRect, backBorderPaint1);
-    canvas.drawRRect(backRRectInner, backBorderPaint2);
-    flameSprite.render(canvas, position: size / 2, anchor: Anchor.center);
+    if (isHorizontal) {
+      canvas.drawRRect(cardRRectHor, backBackgroundPaint);
+      canvas.drawRRect(cardRRectHor, backBorderPaint1);
+      canvas.drawRRect(backRRectInnerHor, backBorderPaint2);
+      flameSprite.render(canvas, position: size / 2, anchor: Anchor.center);
+    } else {
+      canvas.drawRRect(cardRRect, backBackgroundPaint);
+      canvas.drawRRect(cardRRect, backBorderPaint1);
+      canvas.drawRRect(backRRectInner, backBorderPaint2);
+      flameSprite.render(canvas, position: size / 2, anchor: Anchor.center);
+    }
   }
 
   static final Paint frontBackgroundPaint = Paint()

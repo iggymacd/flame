@@ -110,6 +110,13 @@ class DeckPile extends PositionComponent implements Pile {
     // if (effect != null) {
     topCard.add(MoveToEffect(
       onComplete: () {
+        if (playerPile.name == 'WEST' || playerPile.name == 'EAST') {
+          // topCard.angle = degrees2Radians * 90;
+          topCard.toHorizontal();
+        }
+        if (playerPile.name == 'SOUTH') {
+          topCard.flip();
+        }
         playerPile.acquireCard(topCard);
       },
       playerPile.position,

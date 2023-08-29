@@ -20,13 +20,16 @@ import 'components/trick_pile.dart';
 import 'components/waste_pile.dart';
 
 class KlondikeGame extends FlameGame with KeyboardEvents {
+  late final CameraComponent cameraComponent;
   static const double cardGap = 175.0;
   static const double cardWidth = 1000.0;
   static const double cardHeight = 1400.0;
   static const double cardRadius = 100.0;
   static final Vector2 cardSize = Vector2(cardWidth, cardHeight);
+  static final Vector2 cardSizeHor = Vector2(cardHeight, cardWidth);
   static const double gameWidth = cardWidth * 7 + cardGap * 8;
-  static const double gameHeight = 4 * cardHeight + 3 * cardGap;
+  // static const double gameHeight = 4 * cardHeight + 3 * cardGap;
+  static const double gameHeight = gameWidth;
   static final Vector2 gameSize = Vector2(gameWidth, gameHeight);
 
   static final cardRRect = RRect.fromRectAndRadius(
@@ -41,6 +44,8 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
     RawKeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
+    final isKeyDown = event is RawKeyDownEvent;
+
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.keyD) {
         // print('letter D');
@@ -52,7 +57,49 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
         // square.moveUp();
       } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         // square.moveDown();
-      }
+      } else if (event.logicalKey == LogicalKeyboardKey.keyI) {
+        cameraComponent.viewfinder.zoom *= 2;
+        // square.moveDown();
+      } else if (event.logicalKey == LogicalKeyboardKey.keyO) {
+        cameraComponent.viewfinder.zoom /= 2;
+        // square.moveDown();
+      } else if (event.logicalKey == LogicalKeyboardKey.keyW) {
+        // cameraComponent.viewfinder.anchor = Anchor.topCenter;
+        // cameraComponent.viewfinder.visibleGameSize =
+        //     Vector2(gameHeight, gameWidth);
+        // cameraComponent.viewfinder.position =
+        //     Vector2(gameHeight / 2, gameWidth / 2);
+        cameraComponent.viewfinder.angle = radians(90);
+        // cameraComponent.viewfinder.anchor = Anchor.topCenter;
+        // square.moveDown();
+      } else if (event.logicalKey == LogicalKeyboardKey.keyN) {
+        // cameraComponent.viewfinder.anchor = Anchor.bottomCenter;
+        cameraComponent.viewfinder.angle = radians(180);
+        // cameraComponent.viewfinder.visibleGameSize =
+        //     Vector2(gameWidth, gameHeight);
+        // cameraComponent.viewfinder.position =
+        //     Vector2(gameWidth / 2, gameHeight / 2);
+        // cameraComponent.viewfinder.anchor = Anchor.topCenter;
+        // square.moveDown();
+      } else if (event.logicalKey == LogicalKeyboardKey.keyE) {
+        // cameraComponent.viewfinder.anchor = Anchor.bottomLeft;
+        // cameraComponent.viewfinder.visibleGameSize =
+        //     Vector2(gameHeight, gameWidth);
+        // cameraComponent.viewfinder.position =
+        //     Vector2(gameHeight / 2, gameWidth / 2);
+        cameraComponent.viewfinder.angle = radians(270);
+        // cameraComponent.viewfinder.anchor = Anchor.topCenter;
+        // square.moveDown();
+      } else if (event.logicalKey == LogicalKeyboardKey.keyS) {
+        // cameraComponent.viewfinder.anchor = Anchor.topCenter;
+        cameraComponent.viewfinder.angle = radians(0);
+        // cameraComponent.viewfinder.visibleGameSize =
+        //     Vector2(gameWidth, gameHeight);
+        // cameraComponent.viewfinder.position =
+        //     Vector2(gameWidth / 2, gameHeight / 2);
+        // cameraComponent.viewfinder.anchor = Anchor.topCenter;
+        // square.moveDown();
+      } else if (event.logicalKey == LogicalKeyboardKey.keyS) {}
     } else if (event is RawKeyUpEvent) {
       if (event.logicalKey == LogicalKeyboardKey.keyD) {
         print('letter D up');
@@ -93,13 +140,22 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
             gameWidth / 2 - cardWidth / 2, gameHeight / 2 - cardHeight / 2));
     // final waste =
     // WastePile(position: Vector2(cardWidth + 2 * cardGap, cardGap));
-    final playerPiles = List.generate(
-      numberOfPlayers,
-      (i) => PlayerPile(
+    final playerPiles = List.generate(numberOfPlayers, (i) {
+      final pp = PlayerPile(
         i,
-        position: getPlayerPile(i),
-      ),
-    );
+        // position: getPlayerPilePosition(i),
+        name: getPositionName(i),
+      );
+      // if (i.isEven) {
+      //   pp.anchor = Anchor.center;
+      //   pp.angle = degrees2Radians * 90;
+      // }
+      pp.position = getPlayerPilePosition(i);
+      return pp;
+    }
+        // ..anchor = Anchor.center
+        // ..angle = i.isEven ? degrees2Radians * 90 : 0,
+        );
     // final piles = List.generate(
     //   7,
     //   (i) => TableauPile(
@@ -118,16 +174,19 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
           ..add(trickPile)
           ..addAll(playerPiles)
           ..add(deck)
+          ..debugMode = true
         // ..addAll(piles)
         ;
     add(world);
 
-    final camera = CameraComponent(world: world)
-      ..viewfinder.visibleGameSize =
-          Vector2(cardWidth * 7 + cardGap * 8, 4 * cardHeight + 3 * cardGap)
-      ..viewfinder.position = Vector2(cardWidth * 3.5 + cardGap * 4, 0)
-      ..viewfinder.anchor = Anchor.topCenter;
-    add(camera);
+    cameraComponent = CameraComponent(world: world)
+          // ..viewport.debugMode = true
+          ..viewfinder.visibleGameSize = Vector2(gameWidth, gameHeight)
+          // ..viewfinder.position = Vector2(cardWidth * 3.5 + cardGap * 4, 0)
+          ..viewfinder.position = Vector2(gameWidth / 2, gameHeight / 2)
+        // ..viewfinder.anchor = Anchor.center
+        ;
+    add(cameraComponent);
 
     // Function func = ;
     final cards = [
@@ -147,12 +206,12 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
     cards.forEach(deck.acquireCard);
   }
 
-  Vector2 getPlayerPile(int i) {
+  Vector2 getPlayerPilePosition(int i) {
     switch (i) {
       case 0:
 
         /// player is west
-        return Vector2(cardGap, gameHeight / 2 - cardHeight / 2);
+        return Vector2(cardGap, gameHeight / 2 - cardWidth / 2);
       case 1:
 
         /// player is north
@@ -161,7 +220,7 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
 
         /// player is east
         return Vector2(
-            gameWidth - cardWidth - cardGap, gameHeight / 2 - cardHeight / 2);
+            gameWidth - cardHeight - cardGap, gameHeight / 2 - cardWidth / 2);
       case 3:
 
         /// player is south
@@ -176,6 +235,29 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
 
   pressedTimesDisplay() {
     print('clicked!!!!!');
+  }
+
+  String getPositionName(int i) {
+    switch (i) {
+      case 0:
+
+        /// player is west
+        return 'WEST';
+      case 1:
+
+        /// player is north
+        return 'NORTH';
+      case 2:
+
+        /// player is east
+        return 'EAST';
+      case 3:
+
+        /// player is south
+        return 'SOUTH';
+      default:
+        return 'Unknown';
+    }
   }
 }
 
