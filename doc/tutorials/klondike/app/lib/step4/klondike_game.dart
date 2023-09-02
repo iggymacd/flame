@@ -146,10 +146,10 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
         // position: getPlayerPilePosition(i),
         name: getPositionName(i),
       );
-      // if (i.isEven) {
-      //   pp.anchor = Anchor.center;
-      //   pp.angle = degrees2Radians * 90;
-      // }
+      if (i.isEven) {
+        // pp.anchor = Anchor.center;
+        pp.angle = degrees2Radians * 90;
+      }
       pp.position = getPlayerPilePosition(i);
       return pp;
     }
@@ -211,7 +211,8 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
       case 0:
 
         /// player is west
-        return Vector2(cardGap, gameHeight / 2 - cardWidth / 2);
+        return Vector2(cardGap + cardHeight, gameHeight / 2 - cardWidth / 2);
+      // return Vector2(0, 0);
       case 1:
 
         /// player is north
@@ -219,8 +220,7 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
       case 2:
 
         /// player is east
-        return Vector2(
-            gameWidth - cardHeight - cardGap, gameHeight / 2 - cardWidth / 2);
+        return Vector2(gameWidth - cardGap, gameHeight / 2 - cardWidth / 2);
       case 3:
 
         /// player is south

@@ -20,6 +20,7 @@ class PlayerPile extends PositionComponent
   final Suit suit;
   final List<Card> _cards = [];
   final Vector2 _fanOffset1 = Vector2(KlondikeGame.cardWidth * 0.05, 0);
+  final Vector2 _fanOffset2 = Vector2(0, KlondikeGame.cardWidth * 0.05);
 
   //#region Pile API
 
@@ -98,9 +99,25 @@ class PlayerPile extends PositionComponent
       _cards[i].position
         ..setFrom(_cards[i - 1].position)
         // ..add(_cards[i - 1].isFaceDown ? _fanOffset1 : _fanOffset2);
-        ..add(_fanOffset1);
+        ..add(getOffsetByPosition(name));
     }
     width = KlondikeGame.cardWidth * 1.5 + _cards.last.x - _cards.first.x;
+  }
+
+  Vector2 getOffsetByPosition(String position) {
+    switch (position) {
+      case 'SOUTH':
+        return _fanOffset1;
+      case 'NORTH':
+        return _fanOffset1;
+      case 'WEST':
+        return _fanOffset1;
+      case 'EAST':
+        return _fanOffset1;
+      // break;
+      default:
+    }
+    return position == 'SOUTH' || name == 'NORTH' ? _fanOffset1 : _fanOffset2;
   }
 
   @override

@@ -305,14 +305,14 @@ class Card extends PositionComponent with DragCallbacks {
     }
   }
 
-  void deal(Pile pile) {
-    print('dealing card to ${pile.toString()}');
-    final effect = MoveToEffect(
-      Vector2(100, 500),
-      EffectController(duration: 3),
-    );
-    add(effect);
-  }
+  // void deal(Pile pile) {
+  //   print('dealing card to ${pile.toString()}');
+  //   final effect = MoveToEffect(
+  //     Vector2(100, 500),
+  //     EffectController(duration: 3),
+  //   );
+  //   add(effect);
+  // }
   // @override
   // // void onTapUp(TapUpEvent event) => someField;
   // void newMethod(TapUpEvent event) {
