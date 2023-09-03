@@ -1,28 +1,32 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
-import 'package:klondike/step4/components/deck_pile.dart';
 
 import '../klondike_game.dart';
 import '../pile.dart';
 import '../suit.dart';
 import 'card.dart';
+import 'deck_pile.dart';
 
 class PlayerPile extends PositionComponent
     with TapCallbacks, HasGameRef<KlondikeGame>
     implements Pile {
+  // static double get cardSpacingDown => 0.05;
   PlayerPile(int intSuit, {this.name = 'Unknown', super.position})
       : suit = Suit.fromInt(intSuit),
         super(size: KlondikeGame.cardSize);
   final String name;
   final Suit suit;
   final List<Card> _cards = [];
-  final Vector2 _fanOffset1 = Vector2(KlondikeGame.cardWidth * 0.05, 0);
-  final Vector2 _fanOffset2 = Vector2(0, KlondikeGame.cardWidth * 0.05);
+  final Vector2 _fanOffset1 = Vector2(KlondikeGame.cardSpacingFaceDown, 0);
+  final Vector2 _fanOffset2 = Vector2(0, KlondikeGame.cardSpacingFaceDown);
+
+  final Vector2 _fanOffset3 = Vector2(-(KlondikeGame.cardSpacingFaceDown), 0);
+  final Vector2 _fanOffset4 = Vector2(0, -(KlondikeGame.cardSpacingFaceDown));
 
   //#region Pile API
+  double get getCardGap => 0.05;
 
   @override
   bool canMoveCard(Card card) {
@@ -109,11 +113,11 @@ class PlayerPile extends PositionComponent
       case 'SOUTH':
         return _fanOffset1;
       case 'NORTH':
-        return _fanOffset1;
+        return _fanOffset3;
       case 'WEST':
-        return _fanOffset1;
+        return _fanOffset2;
       case 'EAST':
-        return _fanOffset1;
+        return _fanOffset4;
       // break;
       default:
     }

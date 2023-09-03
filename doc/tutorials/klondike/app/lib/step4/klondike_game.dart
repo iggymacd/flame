@@ -39,6 +39,9 @@ class KlondikeGame extends FlameGame with KeyboardEvents {
 
   bool isDealing = false;
 
+  static double cardSpacingFaceDown = cardWidth * 0.10;
+  static double cardSpacingFaceUp = cardWidth * 0.15;
+
   @override
   KeyEventResult onKeyEvent(
     RawKeyEvent event,
